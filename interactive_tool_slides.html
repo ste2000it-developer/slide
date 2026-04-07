@@ -274,6 +274,8 @@
       overflow:hidden;
       font-weight:800;
       letter-spacing:.08em;
+      border:none;
+      cursor:pointer;
     }
 
     .mini-tool img{
@@ -295,20 +297,142 @@
       z-index:1;
     }
 
- .mini-tool small{
-  position:absolute;
-  left:50%;
-  bottom:6px;
-  transform:translateX(-50%);
-  width:100%;
-  text-align:center;
-  font-size:14px;
-  color:#c8d3db;
-  letter-spacing:0;
-  font-weight:400;
-  z-index:2;
-  text-shadow:0 1px 2px rgba(0,0,0,.35);
-}
+    .mini-tool small{
+      position:absolute;
+      left:50%;
+      bottom:6px;
+      transform:translateX(-50%);
+      width:100%;
+      text-align:center;
+      font-size:14px;
+      color:#c8d3db;
+      letter-spacing:0;
+      font-weight:400;
+      z-index:2;
+      text-shadow:0 1px 2px rgba(0,0,0,.35);
+    }
+
+    .mini-tool-popup{
+      position:fixed;
+      inset:0;
+      z-index:120;
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:20px;
+    }
+
+    .mini-tool-popup.show{
+      display:flex;
+    }
+
+    .mini-tool-popup-backdrop{
+      position:absolute;
+      inset:0;
+      background:rgba(5,12,20,.55);
+      backdrop-filter:blur(4px);
+    }
+
+    .mini-tool-popup-panel{
+      position:relative;
+      width:min(680px, 100%);
+      background:#ffffff;
+      border:1px solid #e6edf2;
+      border-radius:28px;
+      box-shadow:0 24px 60px rgba(0,0,0,.18);
+      padding:28px 24px 22px;
+      z-index:1;
+      animation:panelIn .22s ease;
+    }
+
+    @keyframes panelIn{
+      from{
+        opacity:0;
+        transform:translateY(10px) scale(.98);
+      }
+      to{
+        opacity:1;
+        transform:translateY(0) scale(1);
+      }
+    }
+
+    .mini-tool-popup-close{
+      position:absolute;
+      top:14px;
+      right:14px;
+      width:42px;
+      height:42px;
+      border:none;
+      border-radius:14px;
+      background:#f3f6f8;
+      color:#17212b;
+      font-size:20px;
+      cursor:pointer;
+    }
+
+    .mini-tool-popup-head{
+      display:flex;
+      gap:16px;
+      align-items:center;
+      margin-bottom:16px;
+      padding-right:50px;
+    }
+
+    .mini-tool-popup-icon{
+      width:64px;
+      height:64px;
+      border-radius:18px;
+      background:#0f1720;
+      display:grid;
+      place-items:center;
+      flex:0 0 64px;
+    }
+
+    .mini-tool-popup-icon img{
+      width:36px;
+      height:36px;
+      object-fit:contain;
+      filter:brightness(0) invert(1);
+    }
+
+    .mini-tool-popup-title{
+      font-size:28px;
+      font-weight:900;
+      line-height:1.2;
+      color:#17212b;
+      margin:0 0 4px;
+    }
+
+    .mini-tool-popup-sub{
+      margin:0;
+      font-size:16px;
+      line-height:1.6;
+      color:#5f6b76;
+    }
+
+    .mini-tool-popup-body{
+      background:#f8fafc;
+      border:1px solid #e6edf2;
+      border-radius:22px;
+      padding:18px 18px 16px;
+    }
+
+    .mini-tool-popup-body h4{
+      margin:0 0 10px;
+      font-size:18px;
+      color:#17212b;
+    }
+
+    .mini-tool-popup-body ul{
+      margin:0;
+      padding-left:18px;
+      display:grid;
+      gap:10px;
+      color:#33404a;
+      font-size:16px;
+      line-height:1.6;
+    }
+
     .section-head{
       padding:28px 34px 0;
     }
@@ -1040,6 +1164,28 @@
     <button id="nextBtn" aria-label="ถัดไป">↓</button>
   </div>
 
+  <div class="mini-tool-popup" id="miniToolPopup">
+    <div class="mini-tool-popup-backdrop" id="miniToolPopupBackdrop"></div>
+    <div class="mini-tool-popup-panel" role="dialog" aria-modal="true" aria-labelledby="miniToolPopupTitle">
+      <button class="mini-tool-popup-close" id="miniToolPopupClose" aria-label="ปิด">×</button>
+
+      <div class="mini-tool-popup-head">
+        <div class="mini-tool-popup-icon">
+          <img id="miniToolPopupIcon" src="icons/check/check-tools.svg" alt="">
+        </div>
+        <div>
+          <h3 class="mini-tool-popup-title" id="miniToolPopupTitle">หัวข้อ</h3>
+          <p class="mini-tool-popup-sub" id="miniToolPopupSub">รายละเอียดสั้น</p>
+        </div>
+      </div>
+
+      <div class="mini-tool-popup-body">
+        <h4 id="miniToolPopupBodyTitle">รายละเอียด</h4>
+        <ul id="miniToolPopupList"></ul>
+      </div>
+    </div>
+  </div>
+
   <script>
     const tools = [
       {
@@ -1309,6 +1455,15 @@
     const imageLabel = document.getElementById('imageLabel');
     const tabButtons = document.querySelectorAll('.tab-btn');
 
+    const miniToolPopup = document.getElementById('miniToolPopup');
+    const miniToolPopupBackdrop = document.getElementById('miniToolPopupBackdrop');
+    const miniToolPopupClose = document.getElementById('miniToolPopupClose');
+    const miniToolPopupIcon = document.getElementById('miniToolPopupIcon');
+    const miniToolPopupTitle = document.getElementById('miniToolPopupTitle');
+    const miniToolPopupSub = document.getElementById('miniToolPopupSub');
+    const miniToolPopupBodyTitle = document.getElementById('miniToolPopupBodyTitle');
+    const miniToolPopupList = document.getElementById('miniToolPopupList');
+
     let currentTool = 0;
     let currentTab = 'uses';
 
@@ -1327,20 +1482,87 @@
 
     function renderMiniTools(){
       const checklist = [
-        { icon:'icons/check/check-tools.svg', title:'ตรวจเครื่องมือ' },
-        { icon:'icons/check/check-right-tool.svg', title:'เลือกให้ถูกงาน' },
-        { icon:'icons/check/check-area.svg', title:'ตรวจพื้นที่' },
-        { icon:'icons/check/check-ppe.svg', title:'อุปกรณ์ป้องกัน' },
-        { icon:'icons/check/check-plan.svg', title:'วางแผนก่อนทำ' },
-        { icon:'icons/check/check-after.svg', title:'เช็กหลังใช้งาน' }
+        {
+          icon:'icons/check/check-tools.svg',
+          title:'ตรวจเครื่องมือ',
+          sub:'เช็กสภาพอุปกรณ์ก่อนเริ่มงานทุกครั้ง',
+          bodyTitle:'สิ่งที่ควรตรวจ',
+          details:[
+            'ตรวจว่ามีรอยแตก หลวม บิ่น หรือชำรุดหรือไม่',
+            'เช็กด้ามจับ ฉนวน และส่วนที่ต้องสัมผัสมือให้พร้อมใช้งาน',
+            'หากพบอุปกรณ์เสีย ไม่ควรนำมาใช้ต่อทันที'
+          ]
+        },
+        {
+          icon:'icons/check/check-right-tool.svg',
+          title:'เลือกให้ถูกงาน',
+          sub:'ใช้เครื่องมือให้ตรงกับหน้าที่ของมัน',
+          bodyTitle:'หลักการเลือกใช้',
+          details:[
+            'เลือกชนิดและขนาดให้เหมาะกับงาน',
+            'ไม่ใช้เครื่องมือแทนกัน เช่น ใช้คีมแทนประแจ',
+            'เลือกอุปกรณ์ให้เหมาะกับวัสดุและสภาพงาน'
+          ]
+        },
+        {
+          icon:'icons/check/check-area.svg',
+          title:'ตรวจพื้นที่',
+          sub:'ดูสภาพแวดล้อมก่อนลงมือ',
+          bodyTitle:'สิ่งที่ควรเช็ก',
+          details:[
+            'เคลียร์พื้นที่ให้ไม่มีของกีดขวาง',
+            'ตรวจพื้นให้มั่นคง ไม่ลื่น และปลอดภัย',
+            'ดูตำแหน่งสายไฟ จุดเสี่ยง และทางเดินให้เรียบร้อย'
+          ]
+        },
+        {
+          icon:'icons/check/check-ppe.svg',
+          title:'อุปกรณ์ป้องกัน',
+          sub:'เตรียมอุปกรณ์เซฟตี้ให้เหมาะกับงาน',
+          bodyTitle:'อุปกรณ์ที่ควรใช้',
+          details:[
+            'สวมอุปกรณ์ป้องกันตามลักษณะงาน เช่น ถุงมือ รองเท้า หรือแว่นตา',
+            'งานไฟฟ้าควรระวังเป็นพิเศษ และใช้อุปกรณ์ที่เหมาะสม',
+            'ไม่เริ่มงานหากยังไม่มีอุปกรณ์ป้องกันที่จำเป็น'
+          ]
+        },
+        {
+          icon:'icons/check/check-plan.svg',
+          title:'วางแผนก่อนทำ',
+          sub:'คิดลำดับงานก่อนลงมือจริง',
+          bodyTitle:'สิ่งที่ควรวางแผน',
+          details:[
+            'วัดระยะและกำหนดตำแหน่งให้ชัด',
+            'เตรียมเครื่องมือและวัสดุให้ครบก่อนเริ่ม',
+            'กำหนดขั้นตอนทำงานเพื่อลดการแก้งาน'
+          ]
+        },
+        {
+          icon:'icons/check/check-after.svg',
+          title:'เช็กหลังใช้งาน',
+          sub:'ปิดงานให้เรียบร้อยและปลอดภัย',
+          bodyTitle:'สิ่งที่ควรทำหลังใช้งาน',
+          details:[
+            'ตรวจว่าเก็บเครื่องมือครบและเป็นระเบียบ',
+            'ทำความสะอาดอุปกรณ์ก่อนเก็บ',
+            'แยกของที่เสียหรือชำรุดออกจากของที่พร้อมใช้งาน'
+          ]
+        }
       ];
 
-      miniTools.innerHTML = checklist.map(item => `
-        <div class="mini-tool">
+      miniTools.innerHTML = checklist.map((item, index) => `
+        <button class="mini-tool" type="button" data-index="${index}">
           ${createIconWithFallback(item.icon, item.title, 'mini-fallback', 'SVG')}
           <small>${item.title}</small>
-        </div>
+        </button>
       `).join('');
+
+      miniTools.querySelectorAll('.mini-tool').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const item = checklist[Number(btn.dataset.index)];
+          openMiniToolPopup(item);
+        });
+      });
     }
 
     function renderToolList(){
@@ -1426,6 +1648,26 @@
       changeToolImage(currentImage, `${tool.name} - ${getTitle(currentTab)}`);
     }
 
+    function openMiniToolPopup(item){
+      miniToolPopupTitle.textContent = item.title;
+      miniToolPopupSub.textContent = item.sub;
+      miniToolPopupBodyTitle.textContent = item.bodyTitle;
+      miniToolPopupList.innerHTML = item.details.map(text => `<li>${text}</li>`).join('');
+
+      miniToolPopupIcon.style.display = 'block';
+      miniToolPopupIcon.src = item.icon;
+      miniToolPopupIcon.alt = item.title;
+      miniToolPopupIcon.onerror = () => {
+        miniToolPopupIcon.style.display = 'none';
+      };
+
+      miniToolPopup.classList.add('show');
+    }
+
+    function closeMiniToolPopup(){
+      miniToolPopup.classList.remove('show');
+    }
+
     tabButtons.forEach(btn => {
       btn.addEventListener('click', () => {
         currentTab = btn.dataset.tab;
@@ -1433,6 +1675,15 @@
         btn.classList.add('active');
         renderTool();
       });
+    });
+
+    miniToolPopupClose.addEventListener('click', closeMiniToolPopup);
+    miniToolPopupBackdrop.addEventListener('click', closeMiniToolPopup);
+
+    document.addEventListener('keydown', (e) => {
+      if(e.key === 'Escape' && miniToolPopup.classList.contains('show')){
+        closeMiniToolPopup();
+      }
     });
 
     renderMiniTools();
