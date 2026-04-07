@@ -335,12 +335,12 @@
 
     .mini-tool-popup-panel{
       position:relative;
-      width:min(680px, 100%);
+      width:min(920px, 100%);
       background:#ffffff;
       border:1px solid #e6edf2;
-      border-radius:28px;
+      border-radius:32px;
       box-shadow:0 24px 60px rgba(0,0,0,.18);
-      padding:28px 24px 22px;
+      padding:30px 28px 26px;
       z-index:1;
       animation:panelIn .22s ease;
     }
@@ -358,79 +358,115 @@
 
     .mini-tool-popup-close{
       position:absolute;
-      top:14px;
-      right:14px;
-      width:42px;
-      height:42px;
+      top:16px;
+      right:16px;
+      width:46px;
+      height:46px;
       border:none;
-      border-radius:14px;
+      border-radius:16px;
       background:#f3f6f8;
       color:#17212b;
-      font-size:20px;
+      font-size:22px;
       cursor:pointer;
     }
 
     .mini-tool-popup-head{
       display:flex;
-      gap:16px;
+      gap:18px;
       align-items:center;
-      margin-bottom:16px;
-      padding-right:50px;
+      margin-bottom:18px;
+      padding-right:56px;
     }
 
     .mini-tool-popup-icon{
-      width:64px;
-      height:64px;
-      border-radius:18px;
+      width:78px;
+      height:78px;
+      border-radius:22px;
       background:#0f1720;
       display:grid;
       place-items:center;
-      flex:0 0 64px;
+      flex:0 0 78px;
     }
 
     .mini-tool-popup-icon img{
-      width:36px;
-      height:36px;
+      width:42px;
+      height:42px;
       object-fit:contain;
       filter:brightness(0) invert(1);
     }
 
     .mini-tool-popup-title{
-      font-size:28px;
+      font-size:36px;
       font-weight:900;
-      line-height:1.2;
+      line-height:1.15;
       color:#17212b;
-      margin:0 0 4px;
+      margin:0 0 6px;
     }
 
     .mini-tool-popup-sub{
       margin:0;
-      font-size:16px;
+      font-size:20px;
       line-height:1.6;
       color:#5f6b76;
+    }
+
+    .mini-tool-popup-layout{
+      display:grid;
+      grid-template-columns:1.05fr .95fr;
+      gap:20px;
+      align-items:stretch;
     }
 
     .mini-tool-popup-body{
       background:#f8fafc;
       border:1px solid #e6edf2;
-      border-radius:22px;
-      padding:18px 18px 16px;
+      border-radius:24px;
+      padding:22px 22px 18px;
     }
 
     .mini-tool-popup-body h4{
-      margin:0 0 10px;
-      font-size:18px;
+      margin:0 0 12px;
+      font-size:24px;
       color:#17212b;
     }
 
     .mini-tool-popup-body ul{
       margin:0;
-      padding-left:18px;
+      padding-left:22px;
       display:grid;
-      gap:10px;
+      gap:12px;
       color:#33404a;
-      font-size:16px;
+      font-size:19px;
+      line-height:1.75;
+    }
+
+    .mini-tool-popup-figure{
+      position:relative;
+      min-height:300px;
+      border-radius:24px;
+      overflow:hidden;
+      background:#eef2f5;
+      border:1px solid #e6edf2;
+    }
+
+    .mini-tool-popup-figure img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      display:block;
+    }
+
+    .mini-tool-popup-figure-placeholder{
+      position:absolute;
+      inset:0;
+      display:grid;
+      place-items:center;
+      text-align:center;
+      padding:24px;
+      color:#5f6b76;
+      font-size:18px;
       line-height:1.6;
+      background:linear-gradient(180deg,#f4f7f9,#eef2f5);
     }
 
     .section-head{
@@ -941,6 +977,39 @@
       .hero-copy{padding:38px 28px 12px}
     }
 
+    @media (max-width: 820px){
+      .mini-tool-popup-panel{
+        width:min(96vw, 100%);
+        padding:24px 20px 20px;
+        border-radius:26px;
+      }
+
+      .mini-tool-popup-title{
+        font-size:28px;
+      }
+
+      .mini-tool-popup-sub{
+        font-size:17px;
+      }
+
+      .mini-tool-popup-layout{
+        grid-template-columns:1fr;
+      }
+
+      .mini-tool-popup-figure{
+        min-height:220px;
+      }
+
+      .mini-tool-popup-body h4{
+        font-size:21px;
+      }
+
+      .mini-tool-popup-body ul{
+        font-size:17px;
+        line-height:1.7;
+      }
+    }
+
     @media (max-width: 720px){
       .topbar{left:10px; right:10px; padding:10px}
       .nav{display:none}
@@ -1179,9 +1248,18 @@
         </div>
       </div>
 
-      <div class="mini-tool-popup-body">
-        <h4 id="miniToolPopupBodyTitle">รายละเอียด</h4>
-        <ul id="miniToolPopupList"></ul>
+      <div class="mini-tool-popup-layout">
+        <div class="mini-tool-popup-body">
+          <h4 id="miniToolPopupBodyTitle">รายละเอียด</h4>
+          <ul id="miniToolPopupList"></ul>
+        </div>
+
+        <div class="mini-tool-popup-figure">
+          <img id="miniToolPopupImage" src="images/check/check-tools.jpg" alt="">
+          <div class="mini-tool-popup-figure-placeholder" id="miniToolPopupImagePlaceholder">
+            รูปประกอบหัวข้อนี้
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -1463,6 +1541,8 @@
     const miniToolPopupSub = document.getElementById('miniToolPopupSub');
     const miniToolPopupBodyTitle = document.getElementById('miniToolPopupBodyTitle');
     const miniToolPopupList = document.getElementById('miniToolPopupList');
+    const miniToolPopupImage = document.getElementById('miniToolPopupImage');
+    const miniToolPopupImagePlaceholder = document.getElementById('miniToolPopupImagePlaceholder');
 
     let currentTool = 0;
     let currentTab = 'uses';
@@ -1484,6 +1564,7 @@
       const checklist = [
         {
           icon:'icons/check/check-tools.svg',
+          image:'images/check/check-tools.jpg',
           title:'ตรวจเครื่องมือ',
           sub:'เช็กสภาพอุปกรณ์ก่อนเริ่มงานทุกครั้ง',
           bodyTitle:'สิ่งที่ควรตรวจ',
@@ -1495,6 +1576,7 @@
         },
         {
           icon:'icons/check/check-right-tool.svg',
+          image:'images/check/check-right-tool.jpg',
           title:'เลือกให้ถูกงาน',
           sub:'ใช้เครื่องมือให้ตรงกับหน้าที่ของมัน',
           bodyTitle:'หลักการเลือกใช้',
@@ -1506,6 +1588,7 @@
         },
         {
           icon:'icons/check/check-area.svg',
+          image:'images/check/check-area.jpg',
           title:'ตรวจพื้นที่',
           sub:'ดูสภาพแวดล้อมก่อนลงมือ',
           bodyTitle:'สิ่งที่ควรเช็ก',
@@ -1517,6 +1600,7 @@
         },
         {
           icon:'icons/check/check-ppe.svg',
+          image:'images/check/check-ppe.jpg',
           title:'อุปกรณ์ป้องกัน',
           sub:'เตรียมอุปกรณ์เซฟตี้ให้เหมาะกับงาน',
           bodyTitle:'อุปกรณ์ที่ควรใช้',
@@ -1528,6 +1612,7 @@
         },
         {
           icon:'icons/check/check-plan.svg',
+          image:'images/check/check-plan.jpg',
           title:'วางแผนก่อนทำ',
           sub:'คิดลำดับงานก่อนลงมือจริง',
           bodyTitle:'สิ่งที่ควรวางแผน',
@@ -1539,6 +1624,7 @@
         },
         {
           icon:'icons/check/check-after.svg',
+          image:'images/check/check-after.jpg',
           title:'เช็กหลังใช้งาน',
           sub:'ปิดงานให้เรียบร้อยและปลอดภัย',
           bodyTitle:'สิ่งที่ควรทำหลังใช้งาน',
@@ -1659,6 +1745,21 @@
       miniToolPopupIcon.alt = item.title;
       miniToolPopupIcon.onerror = () => {
         miniToolPopupIcon.style.display = 'none';
+      };
+
+      miniToolPopupImage.style.display = 'block';
+      miniToolPopupImagePlaceholder.style.display = 'none';
+      miniToolPopupImage.src = item.image;
+      miniToolPopupImage.alt = item.title;
+
+      miniToolPopupImage.onerror = () => {
+        miniToolPopupImage.style.display = 'none';
+        miniToolPopupImagePlaceholder.style.display = 'grid';
+      };
+
+      miniToolPopupImage.onload = () => {
+        miniToolPopupImage.style.display = 'block';
+        miniToolPopupImagePlaceholder.style.display = 'none';
       };
 
       miniToolPopup.classList.add('show');
