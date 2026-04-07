@@ -277,11 +277,11 @@
     }
 
     .mini-tool img{
-      width:100%;
-      height:100%;
-      object-fit:cover;
+      width:58px;
+      height:58px;
+      object-fit:contain;
       display:block;
-      opacity:.95;
+      filter:brightness(0) invert(1);
     }
 
     .mini-tool .mini-fallback{
@@ -487,13 +487,15 @@
       letter-spacing:.06em;
       overflow:hidden;
       position:relative;
+      padding:8px;
     }
 
     .tool-icon img{
       width:100%;
       height:100%;
-      object-fit:cover;
+      object-fit:contain;
       display:block;
+      filter:brightness(0) saturate(100%) invert(14%) sepia(17%) saturate(1207%) hue-rotate(169deg) brightness(91%) contrast(90%);
     }
 
     .tool-icon .tool-icon-fallback{
@@ -613,6 +615,35 @@
     .tool-placeholder .placeholder-text span{
       font-size:16px;
       line-height:1.6;
+    }
+
+    .tool-image-wrap{
+      position:absolute;
+      inset:0;
+      opacity:1;
+      transform:scale(1);
+      transition:opacity .35s ease, transform .35s ease;
+    }
+
+    .tool-image-wrap.is-changing{
+      opacity:0;
+      transform:scale(1.03);
+    }
+
+    .image-label{
+      position:absolute;
+      top:14px;
+      right:14px;
+      z-index:3;
+      padding:8px 12px;
+      border-radius:999px;
+      background:rgba(255,255,255,.88);
+      color:#473400;
+      font-size:12px;
+      font-weight:900;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      box-shadow:0 8px 18px rgba(0,0,0,.08);
     }
 
     .tool-tag{
@@ -939,8 +970,11 @@
             </div>
 
             <div class="tool-placeholder">
-              <img id="toolImage" src="images/screwdriver.jpg" alt="รูปเครื่องมือ">
-              <div class="image-overlay"></div>
+              <div class="tool-image-wrap" id="toolImageWrap">
+                <img id="toolImage" src="images/screwdriver_use.jpg" alt="รูปเครื่องมือ">
+                <div class="image-overlay"></div>
+                <div class="image-label" id="imageLabel">USE</div>
+              </div>
               <div class="placeholder-text" id="placeholderText">
                 <div>
                   <strong>รอใส่รูป</strong>
@@ -1008,7 +1042,12 @@
     const tools = [
       {
         name: 'ไขควง',
-        image: 'images/screwdriver.jpg',
+        icon: 'icons/screwdriver.svg',
+        images: {
+          uses: 'images/screwdriver_use.jpg',
+          precautions: 'images/screwdriver_precautions.jpg',
+          care: 'images/screwdriver_care.jpg'
+        },
         tag:'งานสกรู / แผง / งานไฟ',
         sub:'ใช้ขันและคลายสกรู โดยควรเลือกหัวไขควงให้ตรงกับสกรูเสมอ',
         uses:[
@@ -1031,7 +1070,12 @@
       },
       {
         name: 'คีม',
-        image: 'images/pliers.jpg',
+        icon: 'icons/pliers.svg',
+        images: {
+          uses: 'images/pliers_use.jpg',
+          precautions: 'images/pliers_precautions.jpg',
+          care: 'images/pliers_care.jpg'
+        },
         tag:'จับ / ดัด / ตัด',
         sub:'เหมาะกับการจับ ดัด ตัดลวดหรือสายไฟ และช่วยจับชิ้นงานขนาดเล็กในพื้นที่แคบ',
         uses:[
@@ -1054,7 +1098,12 @@
       },
       {
         name: 'ประแจเลื่อน',
-        image: 'images/wrench.jpg',
+        icon: 'icons/wrench.svg',
+        images: {
+          uses: 'images/wrench_use.jpg',
+          precautions: 'images/wrench_precautions.jpg',
+          care: 'images/wrench_care.jpg'
+        },
         tag:'ขันและคลายน็อต',
         sub:'ปรับขนาดปากได้ตามหัวน็อต จึงเหมาะกับงานติดตั้งและซ่อมทั่วไป',
         uses:[
@@ -1076,7 +1125,12 @@
       },
       {
         name: 'ค้อน',
-        image: 'images/hammer.jpg',
+        icon: 'icons/hammer.svg',
+        images: {
+          uses: 'images/hammer_use.jpg',
+          precautions: 'images/hammer_precautions.jpg',
+          care: 'images/hammer_care.jpg'
+        },
         tag:'ตอก / เคาะ / ถอน',
         sub:'ใช้ตอกตะปู เคาะปรับตำแหน่งชิ้นงาน และใช้ถอนตะปูได้ในรุ่นค้อนหงอน',
         uses:[
@@ -1099,7 +1153,12 @@
       },
       {
         name: 'ตลับเมตร',
-        image: 'images/tape.jpg',
+        icon: 'icons/tape.svg',
+        images: {
+          uses: 'images/tape_use.jpg',
+          precautions: 'images/tape_precautions.jpg',
+          care: 'images/tape_care.jpg'
+        },
         tag:'วัดระยะ / เช็กขนาด',
         sub:'ใช้วัดระยะ กำหนดตำแหน่งก่อนติดตั้ง และตรวจสอบขนาดงานให้ตรง',
         uses:[
@@ -1122,7 +1181,12 @@
       },
       {
         name: 'คัตเตอร์',
-        image: 'images/cutter.jpg',
+        icon: 'icons/cutter.svg',
+        images: {
+          uses: 'images/cutter_use.jpg',
+          precautions: 'images/cutter_precautions.jpg',
+          care: 'images/cutter_care.jpg'
+        },
         tag:'ตัดวัสดุเบา / เก็บงาน',
         sub:'ใช้ตัดกล่อง เทป ฉนวน และเก็บรายละเอียดงานชิ้นเล็กได้ดี',
         uses:[
@@ -1144,7 +1208,12 @@
       },
       {
         name: 'สว่าน',
-        image: 'images/drill.jpg',
+        icon: 'icons/drill.svg',
+        images: {
+          uses: 'images/drill_use.jpg',
+          precautions: 'images/drill_precautions.jpg',
+          care: 'images/drill_care.jpg'
+        },
         tag:'เจาะ / ขันสกรู / ติดตั้ง',
         sub:'ใช้เจาะไม้ เหล็ก หรือปูน รวมถึงใช้ขันสกรูและติดตั้งอุปกรณ์',
         uses:[
@@ -1167,7 +1236,12 @@
       },
       {
         name: 'บันได',
-        image: 'images/ladder.jpg',
+        icon: 'icons/ladder.svg',
+        images: {
+          uses: 'images/ladder_use.jpg',
+          precautions: 'images/ladder_precautions.jpg',
+          care: 'images/ladder_care.jpg'
+        },
         tag:'ทำงานในที่สูง',
         sub:'ใช้ทำงานในจุดที่เอื้อมไม่ถึง เช่น งานติดตั้ง ซ่อมบำรุง หรือเดินสาย',
         uses:[
@@ -1190,7 +1264,12 @@
       },
       {
         name: 'กล่องเครื่องมือ',
-        image: 'images/toolbox.jpg',
+        icon: 'icons/toolbox.svg',
+        images: {
+          uses: 'images/toolbox_use.jpg',
+          precautions: 'images/toolbox_precautions.jpg',
+          care: 'images/toolbox_care.jpg'
+        },
         tag:'จัดเก็บ / ขนย้าย / จัดเซ็ต',
         sub:'ช่วยเก็บเครื่องมือให้เป็นระเบียบ ขนย้ายสะดวก และเตรียมอุปกรณ์ตามงานได้ง่าย',
         uses:[
@@ -1222,24 +1301,32 @@
     const toolTip = document.getElementById('toolTip');
     const toolVisual = document.getElementById('toolVisual');
     const toolImage = document.getElementById('toolImage');
+    const toolImageWrap = document.getElementById('toolImageWrap');
     const placeholderText = document.getElementById('placeholderText');
     const miniTools = document.getElementById('miniTools');
+    const imageLabel = document.getElementById('imageLabel');
     const tabButtons = document.querySelectorAll('.tab-btn');
 
     let currentTool = 0;
     let currentTab = 'uses';
 
-    function createImgWithFallback(src, alt, fallbackClass, fallbackText){
+    function createIconWithFallback(src, alt, fallbackClass, fallbackText){
       return `
         <img src="${src}" alt="${alt}" onerror="this.style.display='none'; this.nextElementSibling.style.display='grid';">
         <div class="${fallbackClass}" style="display:none;">${fallbackText}</div>
       `;
     }
 
+    function getImageLabel(tab){
+      if(tab === 'uses') return 'USE';
+      if(tab === 'precautions') return 'SAFETY';
+      return 'CARE';
+    }
+
     function renderMiniTools(){
       miniTools.innerHTML = tools.slice(0, 6).map(tool => `
         <div class="mini-tool">
-          ${createImgWithFallback(tool.image, tool.name, 'mini-fallback', 'IMG')}
+          ${createIconWithFallback(tool.icon, tool.name, 'mini-fallback', 'SVG')}
           <small>${tool.name}</small>
         </div>
       `).join('');
@@ -1249,7 +1336,7 @@
       toolList.innerHTML = tools.map((tool, i) => `
         <button class="tool-btn ${i===currentTool ? 'active' : ''}" data-index="${i}">
           <div class="tool-icon">
-            ${createImgWithFallback(tool.image, tool.name, 'tool-icon-fallback', 'IMG')}
+            ${createIconWithFallback(tool.icon, tool.name, 'tool-icon-fallback', 'SVG')}
           </div>
           <div>
             <strong>${tool.name}</strong>
@@ -1278,6 +1365,31 @@
       return 'วิธีเก็บรักษา';
     }
 
+    function changeToolImage(src, alt){
+      toolImageWrap.classList.add('is-changing');
+
+      const nextImage = new Image();
+      nextImage.src = src;
+
+      nextImage.onload = () => {
+        setTimeout(() => {
+          toolImage.src = src;
+          toolImage.alt = alt;
+          toolImage.style.display = 'block';
+          placeholderText.style.display = 'none';
+          toolImageWrap.classList.remove('is-changing');
+        }, 180);
+      };
+
+      nextImage.onerror = () => {
+        setTimeout(() => {
+          toolImage.style.display = 'none';
+          placeholderText.style.display = 'grid';
+          toolImageWrap.classList.remove('is-changing');
+        }, 180);
+      };
+    }
+
     function renderTool(){
       const tool = tools[currentTool];
       toolName.textContent = tool.name;
@@ -1286,6 +1398,7 @@
       toolTip.textContent = tool.tip;
       detailTitle.textContent = getTitle(currentTab);
       renderList(detailList, tool[currentTab]);
+      imageLabel.textContent = getImageLabel(currentTab);
 
       const palettes = [
         'linear-gradient(160deg,#f4b400 0%, #ffd86b 42%, #fff4ce 100%)',
@@ -1298,20 +1411,8 @@
 
       toolVisual.style.background = palettes[currentTool % palettes.length];
 
-      toolImage.style.display = 'block';
-      placeholderText.style.display = 'none';
-      toolImage.src = tool.image;
-      toolImage.alt = tool.name;
-
-      toolImage.onerror = () => {
-        toolImage.style.display = 'none';
-        placeholderText.style.display = 'grid';
-      };
-
-      toolImage.onload = () => {
-        toolImage.style.display = 'block';
-        placeholderText.style.display = 'none';
-      };
+      const currentImage = tool.images[currentTab];
+      changeToolImage(currentImage, `${tool.name} - ${getTitle(currentTab)}`);
     }
 
     tabButtons.forEach(btn => {
