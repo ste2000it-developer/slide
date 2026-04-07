@@ -1324,10 +1324,19 @@
     }
 
     function renderMiniTools(){
-      miniTools.innerHTML = tools.slice(0, 6).map(tool => `
+      const checklist = [
+        { no:'01', title:'ตรวจเครื่องมือ' },
+        { no:'02', title:'เลือกให้ถูกงาน' },
+        { no:'03', title:'ตรวจพื้นที่' },
+        { no:'04', title:'อุปกรณ์ป้องกัน' },
+        { no:'05', title:'วางแผนก่อนทำ' },
+        { no:'06', title:'เช็กหลังใช้งาน' }
+      ];
+
+      miniTools.innerHTML = checklist.map(item => `
         <div class="mini-tool">
-          ${createIconWithFallback(tool.icon, tool.name, 'mini-fallback', 'SVG')}
-          <small>${tool.name}</small>
+          <div class="mini-fallback" style="display:grid;">${item.no}</div>
+          <small>${item.title}</small>
         </div>
       `).join('');
     }
