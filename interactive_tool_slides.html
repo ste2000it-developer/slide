@@ -1668,6 +1668,11 @@
       toolList.querySelectorAll('.tool-btn').forEach(btn => {
         btn.addEventListener('click', () => {
           currentTool = Number(btn.dataset.index);
+          currentTab = 'uses';
+
+          tabButtons.forEach(b => b.classList.remove('active'));
+          document.querySelector('.tab-btn[data-tab="uses"]').classList.add('active');
+
           renderTool();
           renderToolList();
         });
